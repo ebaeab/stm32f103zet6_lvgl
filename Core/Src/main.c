@@ -22,7 +22,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ILI93xx.h"
-
+#include <lvgl.h>
+#include "lv_port_disp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,6 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define LVGL_TICK 	5
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -63,6 +65,13 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static void lvgl_init( void ) 
+{
+    lv_init();
+    lv_port_disp_init();        // 显示器初始化
+    // lv_port_indev_init();       // 输入设备初始化
+    // lv_port_fs_init();          // 文件系统设备初始化
+}
 
 /* USER CODE END 0 */
 
@@ -73,7 +82,7 @@ static void MX_USART1_UART_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  char *data = "STM32F1 FSMC LCD";
+  //char *data = "STM32F1 FSMC LCD";
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -99,18 +108,32 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printf("LCD INIT\r\n");
   TFTLCD_Init();
-  POINT_COLOR=RED;//设置字体为红色 
-  LCD_ShowString(10,50,200,24,32, (uint8_t *)data);	
+  //POINT_COLOR=RED;//设置字体为红色 
+  //LCD_ShowString(10,50,200,24,32, (uint8_t *)data);	
+  
+  lvgl_init();
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   printf("Hello LCD\r\n");
+
+	static char* github_addr = "stm32f103_lvgl_example";
+	lv_obj_t * label = lv_label_create(lv_scr_act());
+    lv_label_set_recolor(label, true);
+    lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR); /*Circular scroll*/
+    lv_obj_set_width(label, 120);
+    lv_label_set_text_fmt(label, "#ff0000 hello: %s#", github_addr);
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 10);
+
+
   while (1)
   {
     /* USER CODE END WHILE */
-
+		lv_tick_inc(LVGL_TICK);
+		lv_timer_handler();
+		HAL_Delay(LVGL_TICK);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

@@ -30,7 +30,6 @@ OPT = -Og
 #######################################
 # Build path
 BUILD_DIR = build
-
 ######################################
 # source
 ######################################
@@ -58,6 +57,12 @@ C_SOURCES =  \
 ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c \
 ../Core/Src/system_stm32f1xx.c  
 
+
+LVGL_PATH ?= ../lvgl
+C_SOURCES += $(shell find $(LVGL_PATH)/src -type f -name '*.c')
+#C_SOURCES += $(shell find $(LVGL_PATH)/demos -type f -name '*.c')
+#C_SOURCES += $(shell find $(LVGL_PATH)/examples -type f -name '*.c')
+C_SOURCES += $(LVGL_PATH)/lv_port_disp.c
 # ASM sources
 ASM_SOURCES =  \
 startup_stm32f103xe.s
@@ -119,6 +124,7 @@ C_INCLUDES =  \
 -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include \
 -I../Drivers/CMSIS/Include
 
+C_INCLUDES += "-I$(LVGL_PATH)"
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
