@@ -1,4 +1,4 @@
-#include "main.h"
+//#include "main.h"
 #include "ILI93xx.h"
 #include "font.h" 
 #include <stdio.h> 
@@ -536,7 +536,7 @@ void TFTLCD_Init(void)
 	LCD_WriteReg(0x0000,0x0001);
 	HAL_Delay(50); // delay 50 ms 
   	lcddev.id = LCD_ReadReg(0x0000);   
-	printf("LCD ID:%x\r\n",lcddev.id); //打印LCD ID   
+	//printf("LCD ID:%x\r\n",lcddev.id); //打印LCD ID   
 	if(lcddev.id==0X9341)	//9341初始化
 	{	 
 		LCD_WR_REG(0xCF);  

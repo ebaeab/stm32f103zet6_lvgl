@@ -60,11 +60,7 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private defines */
-uint8_t u_buf[256];
-#define printf(...) HAL_UART_Transmit(&huart1,\
-(uint8_t *)u_buf,\
-sprintf((char*)u_buf,__VA_ARGS__),\
-0xffff)
+
 
 /* USER CODE END Private defines */
 
