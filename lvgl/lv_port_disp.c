@@ -15,15 +15,8 @@
 /*********************
  *      DEFINES
  *********************/
-#ifndef MY_DISP_HOR_RES
-    #warning Please define or replace the macro MY_DISP_HOR_RES with the actual screen width, default value 320 is used for now.
-    #define MY_DISP_HOR_RES    320
-#endif
-
-#ifndef MY_DISP_VER_RES
-    #warning Please define or replace the macro MY_DISP_HOR_RES with the actual screen height, default value 240 is used for now.
-    #define MY_DISP_VER_RES    240
-#endif
+#define MY_DISP_HOR_RES    320
+#define MY_DISP_VER_RES    240
 
 /**********************
  *      TYPEDEFS
@@ -63,9 +56,7 @@ void lv_port_disp_init(void)
 
     /* Example 1
      * One buffer for partial rendering*/
-    //static lv_color_t buf_1_1[MY_DISP_HOR_RES * 10];                          /*A buffer for 10 rows*/
-	lv_color_t *buf_1_1;                          /*A buffer for 10 rows*/
-	buf_1_1 = lv_malloc(MY_DISP_HOR_RES * 10);
+    static lv_color_t buf_1_1[MY_DISP_HOR_RES * 20];                          /*A buffer for 10 rows*/
     lv_disp_set_draw_buffers(disp, buf_1_1, NULL, sizeof(buf_1_1), LV_DISP_RENDER_MODE_PARTIAL);
 #if 0
     /* Example 2
@@ -125,7 +116,8 @@ static void disp_flush(lv_disp_t * disp_drv, const lv_area_t * area, lv_color_t 
             for(x = area->x1; x <= area->x2; x++) {
                 /*Put a pixel to the display. For example:*/
                 /*put_px(x, y, *px_map)*/
-				LCD_Fast_DrawPoint(x, y, ((uint32_t)(px_map->red) << 11 | (uint32_t)(px_map->green) << 5 | (uint32_t)(px_map->blue)));
+                uint16_t color_full = (px_map->red << 16) | (px_map->green << 8) | (px_map->blue);
+				LCD_Fast_DrawPoint(x, y, color_full);
                 px_map++;
             }
         }

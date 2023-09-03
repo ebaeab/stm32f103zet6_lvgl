@@ -24,6 +24,7 @@
 #include "ILI93xx.h"
 #include <lvgl.h>
 #include "lv_port_disp.h"
+#include "touch.h" 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -116,24 +117,36 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Infinite loop */
+  
   /* USER CODE BEGIN WHILE */
   printf("Hello LCD\r\n");
 
-	static char* github_addr = "stm32f103_lvgl_example";
-	lv_obj_t * label = lv_label_create(lv_scr_act());
+   // Change the active screen's background color
+   lv_obj_set_style_bg_color(lv_scr_act(), lv_color_hex(RED), LV_PART_MAIN);
+   lv_obj_set_style_text_color(lv_scr_act(), lv_color_hex(0xffffff), LV_PART_MAIN);
+
+	  static char* github_addr = "stm32f103_lvgl_example";
+	  lv_obj_t * label = lv_label_create(lv_scr_act());
     lv_label_set_recolor(label, true);
     lv_label_set_long_mode(label, LV_LABEL_LONG_SCROLL_CIRCULAR); /*Circular scroll*/
-    lv_obj_set_width(label, 120);
-    lv_label_set_text_fmt(label, "#ff0000 hello: %s#", github_addr);
-    lv_obj_align(label, LV_ALIGN_CENTER, 0, 10);
+    lv_obj_set_width(label, 320);
+    lv_label_set_text_fmt(label, "hello: %s", github_addr);
+    lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
+
+    tp_dev.init();
 
   while (1)
   {
     /* USER CODE END WHILE */
-		lv_tick_inc(LVGL_TICK);
 		lv_timer_handler();
 		HAL_Delay(LVGL_TICK);
+    HAL_GPIO_TogglePin(LED1_GPIO_Port,LED1_Pin);
+    tp_dev.scan(0); 
+    if(tp_dev.sta&TP_PRES_DOWN)
+    {
+      HAL_GPIO_TogglePin(LED2_GPIO_Port,LED2_Pin);
+    }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
